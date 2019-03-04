@@ -2,7 +2,7 @@ library('tidyverse')
 library('readxl')
 library('tsibble')
 
-#source('paths.R')
+# source('paths2.R')
 
 # CSV cache snapshot ------------------------------------------------------
 raw.files <- c(
@@ -50,6 +50,6 @@ resp <- tsibble(
 resp %>% 
    write_csv(paste(data.path, 'resp_disease.csv'))
 
-rm(resp.raw)
+rm(resp.raw, resp.urserv)
 
 save.image(file = paste(data.path, 'resp_disease.RData'))
