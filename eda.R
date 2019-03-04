@@ -7,13 +7,13 @@ library('tsibble')
 library('plotly')
 library('ggTimeSeries')
 
-source('paths.R')
+source('paths2.R')
 load(file = paste(data.path, 'resp_disease.RData'))
 
 # Exploratory Data Analysis -----------------------------------------------
 
 resp.full.plot <- resp %>% ggplot(aes(x = date, y = admis)) + geom_line() +
-    background_grid(major = "xy", minor = "none")
+    background_grid(minor = "xy")
 
 save_plot(paste0(fig.path,'resp_full.pdf'), 
           resp.full.plot,
@@ -22,22 +22,26 @@ save_plot(paste0(fig.path,'resp_full.pdf'),
 htmlwidgets::saveWidget(as_widget(ggplotly(resp.full.plot)), 
                         paste0(fig.path,'resp_full.html'))
 
-resp <- resp %>% filter(date >= "2014-01-01", date <= "2017-12-31")
+resp.train <- resp %>% filter(date >= "2014-01-01", date <= "2017-12-31")
 
-resp.plot <- resp %>% ggplot(aes(x = date, y = admis)) + geom_line() +
+resp.train.plot <- resp.train %>% ggplot(aes(x = date, y = admis)) + geom_line() +
     background_grid(major = "xy", minor = "none")
 
-save_plot(paste0(fig.path,'resp.pdf'), 
-          resp.plot,
+save_plot(paste0(fig.path,'resp_train.pdf'), 
+          resp.train.plot,
           base_aspect_ratio = 1.8)
 
-htmlwidgets::saveWidget(as_widget(ggplotly(resp.plot)), 
-                        paste0(fig.path,'resp.html'))
+htmlwidgets::saveWidget(as_widget(ggplotly(resp.train.plot)), 
+                        paste0(fig.path,'resp_train.html'))
 resp.acf <- tibble(
     lag = seq(1:(7*8)),
     acf = astsa::acf2(resp$admis, max.lag = 7*8, plot = FALSE)[, 1],
     pacf = astsa::acf2(resp$admis, max.lag = 7*8, plot = FALSE)[, 2]
 )
+
+resp.acf %>% 
+    write_csv(paste(data.path, 'resp_acf_pacf.csv'))
+
 
 resp.acf.plot <- resp.acf %>% ggplot(mapping = aes(x = lag, y = acf)) +
     coord_cartesian(ylim = c(-1, 1)) + background_grid(major = "xy", minor = "none") +

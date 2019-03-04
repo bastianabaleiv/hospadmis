@@ -11,5 +11,8 @@ install.packages("cowplot")
 install.packages("smooth")
 install.packages("tsutils")
 install.packages("caret")
+install.packages("reshape2")
+install.packages("plotly")
 install_github("SteffenMoritz/imputeTS")
 install_github('Ather-Energy/ggTimeSeries')
+
