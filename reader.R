@@ -2,7 +2,7 @@ library('tidyverse')
 library('readxl')
 library('tsibble')
 
-# source('paths2.R')
+source('paths2.R')
 
 # CSV cache snapshot ------------------------------------------------------
 raw.files <- c(
@@ -46,6 +46,28 @@ resp <- tsibble(
     key = id(),
     index = date
 )
+
+resp <- resp %>% mutate(
+    year = lubridate::year(date),
+    month = lubridate::month(date, label = TRUE),
+    month.day = lubridate::day(date),
+    day = lubridate::wday(
+        date,
+        label = TRUE,
+        abbr = FALSE,
+        week_start =
+            getOption("lubridate.week.start", 1)
+    ),
+    week.day = lubridate::wday(
+        date,
+        label = FALSE,
+        abbr = FALSE,
+        week_start =
+            getOption("lubridate.week.start", 1)
+    ),
+    time = rep(0:47, length.out = nrow(resp))
+) %>%
+    mutate(weekend = if_else(day %in% c("Saturday", "Sunday"), 1, 0))
 
 resp %>% 
    write_csv(paste(data.path, 'resp_disease.csv'))

@@ -15,4 +15,6 @@ install.packages("reshape2")
 install.packages("plotly")
 install_github("SteffenMoritz/imputeTS")
 install_github('Ather-Energy/ggTimeSeries')
+devtools::install_github("tidyverts/fasster")
+devtools::install_github("tidyverts/fable")
 
