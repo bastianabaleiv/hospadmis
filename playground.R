@@ -2,8 +2,6 @@ library(tidyverse)
 library(tsibble)
 library(reshape2)
 library(forecast)
-library(fasster)
-library(fable)
 
 source('paths2.R')
 load(file = paste(data.path, 'resp_disease.RData'))

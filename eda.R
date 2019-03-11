@@ -7,7 +7,7 @@ library('tsibble')
 library('plotly')
 library('ggTimeSeries')
 
-source('paths2.R')
+source('paths3.R')
 load(file = paste(data.path, 'resp_disease.RData'))
 
 # Exploratory Data Analysis -----------------------------------------------
@@ -191,3 +191,6 @@ resp.yearly %>% ggplot() + geom_line(aes(x = resp$date, y = resp$admis), color =
     
 resp.yearly.plot <- resp %>% ggplot(aes(date, admis, colour = year)) + geom_line() +
     background_grid(major = "xy", minor = "none")
+
+
+# scale_x_date(date_breaks = "1 year", date_labels = "%m-%Y") 
