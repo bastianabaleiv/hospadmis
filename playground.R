@@ -17,7 +17,6 @@ lines(resp.arima.fit$fitted, col = 'blue')
 
 legend('topleft', legend=c('Actual', 'Sarima', 'Arima'),
        col=c('black','red','blue'), lty=1:3, cex=0.8)
-
 as.ts(resp.train$admis) %>% diff(lag = 7) %>% ggtsdisplay(xlab = 'Year',
                                                                        main = 'Diff week')
 

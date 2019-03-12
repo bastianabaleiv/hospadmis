@@ -165,19 +165,29 @@ save_plot(paste0(fig.path, 'resp_box_plot.pdf'),
 
 resp.yearly <- resp %>% index_by(year) %>% nest()
 
+msts(resp.train$admis, seasonal.periods=c(7,365.25)) %>% seasplot(trend = FALSE,  outplot = 1)
+
 msts(resp.train$admis, seasonal.periods=c(7,365.25), start = c(2014,1,1)) %>% seasplot(trend = FALSE,  outplot = 1)
 
-ts(resp.train$admis, frequency = 7, start = c(2014,1,1)) %>% ggseasonplot()
+ts(resp.train$admis, frequency = 365.25, start = c(2014,1,1)) %>% ggseasonplot(polar = TRUE)
+
+msts(resp.train$admis, seasonal.periods=c(7,365.25)) %>% ggseasonplot()
+    
+#    theme(axis.text.x=element_blank(),
+#          axis.ticks.x=element_blank())
+
 
 ggplot() +
     geom_line(data = resp.yearly$data[[1]], aes(x = date, y = admis), color = 'red') +
     geom_line(data = resp.yearly$data[[2]], aes(x = date, y = admis), color = 'blue') + 
     xlab('Date') + ylab('Admissions')
-    
+
 ggplot(resp, aes(x = date, y = admis, colour = as.factor(year))) + geom_line()
 
-resp.yearly.plot <- resp %>% ggplot(aes(date, admis, colour = year)) + geom_line()
+resp.yearly.plot <- resp.yearly %>% mutate(resp.y)
 
-par(mfrow=c(5,1))
-ts.plot(fmri1[,2:5], col=1:4, ylab="BOLD", main="Cortex")
-ts.plot(fmri1[,6:9], col=1:4, ylab="BOLD", main="Thalamus & Cerebellum")
+resp.yearly %>% ggplot() + geom_line(aes(x = resp$date, y = resp$admis), color = "year")
+    
+    
+resp.yearly.plot <- resp %>% ggplot(aes(date, admis, colour = year)) + geom_line() +
+    background_grid(major = "xy", minor = "none")
