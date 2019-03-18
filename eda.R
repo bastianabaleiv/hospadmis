@@ -141,9 +141,6 @@ save_plot(paste0(fig.path, 'resp_heatmap.pdf'),
           resp.heatmap,
           base_aspect_ratio = 2)
 
-resp.train %>%
-    write_csv(paste(data.path, 'resp_full.csv'))
-
 resp.train %>% tsibble::index_by(week.day = day) %>% summarize(admis.avg = mean(admis),
                                                                     admis.sd = sd(admis)) %>% ggplot(aes(
                                                                         x = week.day,
@@ -178,6 +175,19 @@ ggplot(resp, aes(x = date, y = admis, colour = as.factor(year))) + geom_line()
 
 resp.yearly.plot <- resp %>% ggplot(aes(date, admis, colour = year)) + geom_line()
 
+
+# 
+
 par(mfrow=c(5,1))
 ts.plot(fmri1[,2:5], col=1:4, ylab="BOLD", main="Cortex")
 ts.plot(fmri1[,6:9], col=1:4, ylab="BOLD", main="Thalamus & Cerebellum")
+
+resp.yearly <- resp %>% index_by(year) %>% nest()
+
+msts(resp.train$admis, seasonal.periods=c(7,365.25)) %>% seasplot(trend = FALSE,  outplot = 1)
+
+msts(resp.train$admis, seasonal.periods=c(7,365.25), start = c(2014,1,1)) %>% seasplot(trend = FALSE,  outplot = 1)
+
+ts(resp.train$admis, frequency = 365.25, start = c(2014,1,1)) %>% ggseasonplot(polar = TRUE)
+
+msts(resp.train$admis, seasonal.periods=c(7,365.25)) %>% ggseasonplot()
